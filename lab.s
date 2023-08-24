@@ -7,6 +7,7 @@ msg3:	db	"Input accuracy: ", 0
 msg4:	db	"%f", 0
 msg5:	db	"asinhf(%.2g)=%.5g", 10, 0
 msg6:	db	"my_asinhf(%.2g)=%.5g", 10, 0
+msg7:	db	"Invalid argument...", 10, 0
 section	.text
 one		dd	1.0
 negone	dd	-1.0
@@ -33,6 +34,14 @@ main:
 	xor		eax, eax
 	call	scanf
 
+	movss	xmm0, [rbp-x]
+
+	ucomiss	xmm0, [one]
+	jae		error
+
+	ucomiss	xmm0, [negone]
+	jbe		error
+
 	mov 	edi, msg3
 	xor		eax, eax
 	call	printf
@@ -42,7 +51,7 @@ main:
 	xor		eax, eax
 	call	scanf
 	
-	movss	xmm0, [rbp-x]
+	movss	xmm0, [rbp-x]            ; возможно не надо
 	call	asinhf
 	
 	movss	dword[rbp-y], xmm0
@@ -69,6 +78,15 @@ main:
 	
 	leave
 	xor		eax, eax
+	ret
+
+	error:
+	mov 	edi, msg7
+	xor		eax, eax
+	call	printf
+
+	leave
+	mov 	eax, 1
 	ret
 
 my_asinhf:
