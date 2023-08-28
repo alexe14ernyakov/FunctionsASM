@@ -98,6 +98,8 @@ my_asinhf:
 	movss	xmm6, xmm0
 	
 	next_element:
+	movss	xmm7, xmm1
+	
 	mulss	xmm1, [negone]
 	divss	xmm1, [four]
 	mulss	xmm1, xmm3
@@ -112,16 +114,18 @@ my_asinhf:
 	divss	xmm1, xmm5
 	mulss	xmm1, xmm6
 	mulss	xmm1, xmm6
-	
-	ucomiss	xmm1, xmm2
+
+	subss	xmm7, xmm1
+
+	ucomiss	xmm7, xmm2
 	jae		addition
 
 	mulss	xmm2, [negone]
-	ucomiss	xmm1, xmm2
+	ucomiss	xmm7, xmm2
 	jbe		negative_term
 
 	ret
-	
+
 	negative_term:
 	mulss	xmm2, [negone]
 
